@@ -1,0 +1,23 @@
+{
+  "name": "sacredview",
+  "version": "0.1.0",
+  "description": "UI for sacred, a reproducable research tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Zhomart/sacredview.git"
+  },
+  "keywords": [
+    "sacred",
+    "nodejs"
+  ],
+  "author": "Zhomart Mukhamejanov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Zhomart/sacredview/issues"
+  },
+  "homepage": "https://github.com/Zhomart/sacredview#readme"
+}
