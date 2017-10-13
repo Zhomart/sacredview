@@ -1,7 +1,18 @@
-# SacredView
+# sacredview
 
-UI for [sacred](https://github.com/IDSIA/sacred). Sacred helps you configure, organize, log and reproduce experiments.
+> UI for sacred, a reproducable research tool
 
-## Using SacredView with sacred
+## Build Setup
 
-Currently SacredView only supports MongoDB observer.
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+```
+
+For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
