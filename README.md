@@ -1,7 +1,7 @@
-# SacredVue
+# SacredView
 
 UI for [sacred](https://github.com/IDSIA/sacred). Sacred helps you configure, organize, log and reproduce experiments.
 
-## Using SacredVue with sacred
+## Using SacredView with sacred
 
-Currently SacredVue only supports MongoDB observer.
+Currently SacredView only supports MongoDB observer.
