@@ -9,3 +9,8 @@ export const getRuns = (params) => {
   }
   return axios.get(url, { params: defaultParams })
 }
+
+export const getRun = (id) => {
+  const url = `/api/runs/${id}`
+  return axios.get(url)
+}

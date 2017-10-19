@@ -15,6 +15,7 @@ const newRoute = (path, name) => {
 const router = new Router({
   routes: [
     newRoute('/runs', 'Runs'),
+    newRoute('/runs/:id', 'Run'),
   ]
 })
 

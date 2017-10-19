@@ -15,7 +15,18 @@ router.get('/', (req, res) => {
     .then(([runs, total]) => {
       res.send({ runs, meta: { total } })
     }).catch(err => {
-    console.log('err')
+    console.log(err)
+    res.status(400)
+    res.send({message: 'db error'})
+  })
+});
+
+/* GET a run. */
+router.get('/:id', (req, res) => {
+  const db_runs = req.database.collection('runs')
+  db_runs.findOne({_id: parseInt(req.params.id) }).then(run => {
+    res.send({ run: run })
+  }).catch(err => {
     console.log(err)
     res.status(400)
     res.send({message: 'db error'})

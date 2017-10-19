@@ -3,11 +3,12 @@
     <table class="table is-stripped runs">
       <thead>
         <tr>
-          <td>ID</td>
-          <td>Experiment</td>
-          <td>Start time</td>
-          <td>Last activity</td>
-          <td width="15%">Result</td>
+          <th>ID</th>
+          <th>Experiment</th>
+          <th>Start time</th>
+          <th>Last activity</th>
+          <th width="20%">Result</th>
+          <th width="40px"></th>
         </tr>
       </thead>
       <tbody>
@@ -17,6 +18,7 @@
           <td>{{ formatDateTime(r.start_time) }}</td>
           <td>{{ formatTime(r.heartbeat) }}</td>
           <td>{{ r.result ? 'YES' : '' }}</td>
+          <td><router-link :to="`/runs/${r._id}`">Details</router-link></td>
         </tr>
       </tbody>
     </table>
