@@ -1,11 +1,13 @@
 var path = require('path')
 var webpack = require('webpack')
+var FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './ui/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
+    publicPath: '/',
     filename: 'build.js'
   },
   module: {
@@ -35,22 +37,41 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css?sourceMap'
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader?limit=10000',
       }
-    ]
+    ],
   },
   resolve: {
+    modules: [
+      path.resolve('./ui'),
+      'node_modules',
+    ],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
-    }
+      'vue$': 'vue/dist/vue.esm.js',
+    },
   },
   devServer: {
+    contentBase: './dist',
     historyApiFallback: true,
     noInfo: true
   },
   performance: {
     hints: false
   },
-  devtool: '#eval-source-map'
+  devtool: '#eval-source-map',
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'index.html',
+      inject: true,
+    }),
+  ]
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -71,5 +92,10 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
+  ])
+} else {
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.NamedModulesPlugin(),
+    new FriendlyErrorsWebpackPlugin(),
   ])
 }

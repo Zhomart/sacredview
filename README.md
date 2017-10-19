@@ -4,12 +4,15 @@
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
+cd ./server && npm install
 
-# serve with hot reload at localhost:8080
-npm run dev
+# watch and build, updates ./dist, works well together
+# with server
+npm run watch
+cd ./server && npm start
 
 # build for production with minification
 npm run build
