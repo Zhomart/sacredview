@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <div class="select-status">
+      <select-buttons :items="[['Completed', 'COMPLETED'], ['All', null]]" v-model="selectedStatus"/>
+    </div>
+
     <table class="table is-stripped runs">
       <thead>
         <tr>
@@ -7,6 +11,7 @@
           <th>Experiment</th>
           <th>Start time</th>
           <th>Last activity</th>
+          <th>Status</th>
           <th width="20%">Result</th>
           <th width="40px"></th>
         </tr>
@@ -17,6 +22,7 @@
           <td>{{ r.experiment.name }}</td>
           <td>{{ formatDateTime(r.start_time) }}</td>
           <td>{{ formatTime(r.heartbeat) }}</td>
+          <td>{{ r.status }}</td>
           <td>{{ r.result ? 'YES' : '' }}</td>
           <td><router-link :to="`/runs/${r._id}`">Details</router-link></td>
         </tr>
@@ -30,6 +36,7 @@
 import * as RunsService from 'services/runs'
 import moment from 'moment'
 import Pagination from 'components/Pagination.vue'
+import SelectButtons from 'components/SelectButtons.vue'
 
 export default {
   data () {
@@ -38,6 +45,7 @@ export default {
       page: parseInt(this.$route.query.page) || 1,
       totalPages: 1,
       runs: [],
+      selectedStatus: 'COMPLETED',
     }
   },
   created () {
@@ -50,12 +58,16 @@ export default {
     },
     '$route' (to, from) {
       this.page = parseInt(this.$route.query.page) || 1
-    }
+    },
+    selectedStatus () {
+      this.getRuns()
+    },
   },
   methods: {
     getRuns () {
       let offset = this.perPage * (this.page - 1)
-      RunsService.getRuns({limit: this.perPage, offset}).then(res => {
+      const status = this.selectedStatus;
+      RunsService.getRuns({limit: this.perPage, offset, status}).then(res => {
         this.runs = res.data.runs
         this.totalPages = Math.floor((res.data.meta.total + this.perPage - 1) / this.perPage)
       }).catch(err => {
@@ -70,11 +82,14 @@ export default {
       return moment(time).format('h:mm:ss')
     },
   },
-  components: { Pagination }
+  components: { Pagination, SelectButtons }
 }
 </script>
 
 <style lang="scss">
+.select-status {
+  margin-bottom: 12px;
+}
 .runs {
   width: 100%;
 }

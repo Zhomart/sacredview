@@ -6,9 +6,14 @@ router.get('/', (req, res) => {
   const limit = parseInt(req.query.limit) || 5
   const offset = parseInt(req.query.offset) || 0
   const db_runs = req.database.collection('runs')
-  const runs_ = db_runs.find({})
+  let query = {};
+  if (req.query.status) {
+    query = Object.assign(query, { status: req.query.status })
+  }
+  const runs_ = db_runs.find(query)
       .skip(offset)
       .limit(limit)
+      .sort({start_time: -1})
       .toArray()
   const total_ = db_runs.count()
   Promise.all([runs_, total_])

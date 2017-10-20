@@ -16,6 +16,7 @@ const router = new Router({
   routes: [
     newRoute('/runs', 'Runs'),
     newRoute('/runs/:id', 'Run'),
+    newRoute('/visualize/results-by-config', 'visualize/ResultsByConfig'),
   ]
 })
 

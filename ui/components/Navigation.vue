@@ -1,49 +1,33 @@
 <template>
 <nav class="navbar is-transparent">
   <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
-      <img src="http://lorempixel.com/400/200/abstract" width="112" height="28">
-    </a>
+    <router-link to="/" class="navbar-item">
+      [SacredView]
+    </router-link>
   </div>
 
   <div id="navMenuTransparentExample" class="navbar-menu">
     <div class="navbar-start">
+      <router-link to="/runs" class="navbar-item is-active">
+        Runs
+      </router-link>
       <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link  is-active" href="/documentation/overview/start/">
-          Docs
+        <a class="navbar-link is-active">
+          Visualize
         </a>
         <div class="navbar-dropdown is-boxed">
-          <a class="navbar-item " href="https://bulma.io/documentation/elements/box/">
-            Overview
-          </a>
-
-            <a class="navbar-item is-active" href="https://bulma.io/documentation/components/breadcrumb/">
-              Components
-            </a>
-
+          <router-link to="/visualize/results-by-config" class="navbar-item is-active">
+            Results by config
+          </router-link>
           <hr class="navbar-divider">
-          <div class="navbar-item">
-            <div>
-              <p class="is-size-6-desktop">
-                <strong>0.6.0</strong>
-              </p>
-
-                <small>
-                  <a class="bd-view-all-versions" href="https://versions.bulma.io/">View all versions</a>
-                </small>
-
-            </div>
-          </div>
         </div>
       </div>
-      <a class="navbar-item " href="https://bulma.io/expo/">
-        <span class="bd-emoji">⭐️</span>
-        Expo
-      </a>
-      <a class="navbar-item " href="https://bulma.io/love/">
-        <span class="bd-emoji">❤️</span>
-        Love
-      </a>
+      <router-link to="/" class="navbar-item">
+        <span class="bd-emoji">⭐️</span> Expo
+      </router-link>
+      <router-link to="/" class="navbar-item">
+        <span class="bd-emoji">❤️</span> Love
+      </router-link>
     </div>
 
     <div class="navbar-end">
