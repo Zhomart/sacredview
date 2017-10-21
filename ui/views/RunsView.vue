@@ -66,8 +66,12 @@ export default {
   methods: {
     getRuns () {
       let offset = this.perPage * (this.page - 1)
-      const status = this.selectedStatus;
-      RunsService.getRuns({limit: this.perPage, offset, status}).then(res => {
+      let f = {}
+      if (this.selectedStatus) {
+        f.status = this.selectedStatus
+      }
+      const filter = JSON.stringify(f)
+      RunsService.getRuns({limit: this.perPage, offset, filter}).then(res => {
         this.runs = res.data.runs
         this.totalPages = Math.floor((res.data.meta.total + this.perPage - 1) / this.perPage)
       }).catch(err => {

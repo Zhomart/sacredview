@@ -41,7 +41,6 @@ export default {
 
 <style>
 .filters {
-  width: 600px;
   box-shadow: none;
 }
 </style>

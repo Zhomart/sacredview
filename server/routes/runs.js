@@ -1,21 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
-/* GET runs. */
+/* GET /api/runs.
+  returns list of runs.
+  query params:
+  - limit : int
+  - offset : int
+  - filter : string - JSON string
+*/
 router.get('/', (req, res) => {
   const limit = parseInt(req.query.limit) || 5
   const offset = parseInt(req.query.offset) || 0
+  const filter = JSON.parse(req.query.filter) || {}
   const db_runs = req.database.collection('runs')
-  let query = {};
-  if (req.query.status) {
-    query = Object.assign(query, { status: req.query.status })
-  }
-  const runs_ = db_runs.find(query)
+  const runs_ = db_runs.find(filter)
       .skip(offset)
       .limit(limit)
       .sort({start_time: -1})
       .toArray()
-  const total_ = db_runs.count()
+  const total_ = db_runs.count(filter)
   Promise.all([runs_, total_])
     .then(([runs, total]) => {
       res.send({ runs, meta: { total } })
@@ -26,7 +29,7 @@ router.get('/', (req, res) => {
   })
 });
 
-/* GET a run. */
+/* GET /api/runs/:id. */
 router.get('/:id', (req, res) => {
   const db_runs = req.database.collection('runs')
   db_runs.findOne({_id: parseInt(req.params.id) }).then(run => {
