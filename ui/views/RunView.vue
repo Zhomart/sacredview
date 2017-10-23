@@ -2,7 +2,7 @@
 <div class="container">
   <div class="loading"></div>
   <div class="run" v-if="run">
-    <router-link to="/runs">Back</router-link>
+    <router-link to="/runs">Back to list of runs</router-link>
     <h1 class="title">[{{ run._id }}] {{ run.experiment.name }}</h1>
     <div>Started at {{ formatDateTime(run.start_time) }}</div>
     <div>Last update {{ formatDateTime(run.heartbeat) }} ({{ timeDist(run.heartbeat, run.start_time) }}s)</div>

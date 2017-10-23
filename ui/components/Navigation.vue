@@ -22,12 +22,6 @@
           <hr class="navbar-divider">
         </div>
       </div>
-      <router-link to="/" class="navbar-item">
-        <span class="bd-emoji">⭐️</span> Expo
-      </router-link>
-      <router-link to="/" class="navbar-item">
-        <span class="bd-emoji">❤️</span> Love
-      </router-link>
     </div>
 
     <div class="navbar-end">

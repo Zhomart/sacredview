@@ -4,7 +4,7 @@
     <div class="button">root</div>
   </div>
   <div class="control is-expanded">
-    <input type="text" placeholder=".experiment.name" class="input" v-model="value.lefthand" @change="ev => { $emit('change', this.value) }">
+    <input type="text" placeholder=".experiment.name" class="input" v-model="value.lefthand" @input="ev => { $emit('change', this.value) }">
   </div>
   <div class="control">
     <span class="select">
@@ -14,16 +14,9 @@
     </span>
   </div>
   <div class="control">
-    <input type="text" placeholder="value" class="input" v-model="value.righthand" @change="ev => { $emit('change', this.value) }" >
+    <input type="text" placeholder="value" class="input" v-model="value.righthand" @input="ev => { $emit('change', this.value) }" >
   </div>
-  <div class="control" v-if="isNewFilter">
-    <a class="button" @click="clickNewFilter()">
-      <span class="icon is-small">
-        <i class="fa fa-plus"></i>
-      </span>
-    </a>
-  </div>
-  <div class="control" v-else>
+  <div class="control">
     <a class="button is-danger" @click="clickDeleteFilter()">
       <span class="icon is-small">
         <i class="fa fa-remove"></i>

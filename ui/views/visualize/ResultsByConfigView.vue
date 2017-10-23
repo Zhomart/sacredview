@@ -23,6 +23,7 @@
           </div>
         </div>
         <i>runs with given results present and numeric will be used</i>
+        <button class="button" @click="updateChart">Update</button>
       </div>
     </div> <!-- .column -->
     <div class="column">
@@ -31,16 +32,39 @@
     </div>
   </div> <!-- .columns -->
   <div>
-    <chart :type="'pie'" :data="chartData" :options="chartOptions"></chart>
+    <chart-results-by-config :runs="filteredRuns" :data="chartData" :labels="chartLabels" />
   </div>
 </div>
 </template>
 
 <script>
 import Datepicker from 'vue-bulma-datepicker'
-import Chart from 'vue-bulma-chartjs'
 import RunFilters from 'components/RunFilters/index'
+import ChartResultsByConfig from 'components/ChartResultsByConfig'
+import moment from 'moment'
 import * as RunsService from 'services/runs'
+import { safeDotGet } from 'utils'
+
+const filtersToMongo = filters => {
+  let mongoQuery = {}
+  filters.forEach(f => {
+    if (f.lefthand) {
+      let lefthand = f.lefthand[0] == '.' ? f.lefthand.substr(1, f.lefthand.length) : f.lefthand
+      if (f.op === '==') {
+        mongoQuery[lefthand] = f.righthand
+      } else if (f.op === '>') {
+        mongoQuery[lefthand] = { '$gt': f.righthand }
+      } else if (f.op === '<') {
+        mongoQuery[lefthand] = { '$lt': f.righthand }
+      } else if (f.op === '!=') {
+        mongoQuery[lefthand] = { '$ne': f.righthand }
+      } else if (f.op === 'regex') {
+        mongoQuery[lefthand] = { '$regex': f.righthand }
+      }
+    }
+  })
+  return mongoQuery
+}
 
 export default {
   data () {
@@ -50,22 +74,10 @@ export default {
       yAxis: this.$store.state.resultsByConfig.yAxis,
       exampleRun: {},
       totalRuns: 0,
-      chartData: {
-        labels: ['Sleeping', 'Designing', 'Coding', 'Cycling'],
-          datasets: [{
-          data: [20, 40, 5, 35],
-          backgroundColor: [
-            '#1fc8db',
-            '#fce473',
-            '#42afe3',
-            '#ed6c63',
-            '#97cd76'
-          ]
-        }]
-      },
-      chartOptions: {
-        segmentShowStroke: false
-      },
+      runs: [],
+      filteredRuns: [],
+      chartData: [],
+      chartLabels: [],
     }
   },
   watch: {
@@ -73,37 +85,62 @@ export default {
   created () {
     this.fetchExampleRun()
   },
+  computed: {
+    parsedYAxis () {
+      if (!this.yAxis) {
+        return 'result'
+      } else if (this.yAxis[0] === '.') {
+        return `result${this.yAxis}`
+      } else {
+        return `result.${this.yAxis}`
+      }
+    }
+  },
+  watch: {
+    runs () {
+      let chartLabels = []
+      let chartData = []
+      let filteredRuns = []
+      const sortedRuns = this.runs.slice(0).sort((a, b) => moment(a.start_time) - moment(b.start_time))
+      sortedRuns.forEach(r => {
+        const y = safeDotGet(r, this.parsedYAxis)
+        if (typeof y === 'number'){
+          chartData.push(y)
+          chartLabels.push(r._id)
+          filteredRuns.push(r)
+        }
+      })
+      this.filteredRuns = filteredRuns
+      this.chartData = chartData
+      this.chartLabels = chartLabels
+    }
+  },
   methods: {
     applyFilters () {
       this.$store.commit('setFilters', this.filters)
       this.fetchExampleRun()
     },
     fetchExampleRun () {
-      let filter = {}
-      this.filters.forEach(f => {
-        let lefthand = f.lefthand[0] == '.' ? f.lefthand.substr(1, f.lefthand.length) : f.lefthand
-        if (f.op === '==') {
-          filter[lefthand] = f.righthand
-        } else if (f.op === '>') {
-          filter[lefthand] = { '$gt': f.righthand }
-        } else if (f.op === '<') {
-          filter[lefthand] = { '$lt': f.righthand }
-        } else if (f.op === '!=') {
-          filter[lefthand] = { '$ne': f.righthand }
-        } else if (f.op === 'regex') {
-          filter[lefthand] = { '$regex': f.righthand }
-        }
-      })
+      const filter = filtersToMongo(this.filters)
       let params = { filter: JSON.stringify(filter), limit: 1 }
       RunsService.getRuns(params).then(res => {
-        console.log(res)
         this.exampleRun = res.data.runs[0]
         this.totalRuns = res.data.meta.total
       }).catch(err => {
         console.log(err)
       })
-    }
+    },
+    updateChart () {
+      const filter = filtersToMongo(this.filters)
+      let params = { filter: JSON.stringify(filter), limit: 100 }
+      RunsService.getRuns(params).then(res => {
+        console.log('asd1qwe')
+        this.runs = res.data.runs
+      }).catch(err => {
+        console.log(err)
+      })
+    },
   },
-  components: { Datepicker, RunFilters, Chart }
+  components: { Datepicker, RunFilters, ChartResultsByConfig }
 }
 </script>
